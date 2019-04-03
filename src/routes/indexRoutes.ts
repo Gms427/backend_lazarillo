@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import request from 'request';
+import { paradas } from '../paradas';
 
 class IndexRoutes {
 
@@ -16,6 +17,7 @@ class IndexRoutes {
             res.send(coordinates);
         });
         
+        
         // http://localhost:3000?x=34.565675&y=21.342423
         this.router.get('/', (req: Request, res: Response) => {
             const coordinates = req.query;
@@ -26,13 +28,13 @@ class IndexRoutes {
                 method: 'GET',
                 jar: true,
                 headers: {
-                    'User-Agent':       'Super Agent/0.0.1',
-                    'Content-Type':     'application/x-www-form-urlencoded'
+                    'User-Agent': 'Super Agent/0.0.1',
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }
-
-            request(options, (error, response, body) => {
-                res.send(body);
+            
+            request(options, (error: any, response: any, body: any) => {
+                res.send(paradas);
             });
 
             //res.send(coordinates);

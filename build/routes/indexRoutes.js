@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const request_1 = __importDefault(require("request"));
+const paradas_1 = require("../paradas");
 class IndexRoutes {
     constructor() {
         this.router = express_1.Router();
@@ -30,7 +31,7 @@ class IndexRoutes {
                 }
             };
             request_1.default(options, (error, response, body) => {
-                res.send(body);
+                res.send(paradas_1.paradas);
             });
             //res.send(coordinates);
         });
