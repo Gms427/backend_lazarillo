@@ -11,18 +11,36 @@ class IndexRoutes {
         this.router = express_1.Router();
         this.config();
     }
+    getNearestStop(x, y) {
+        console.log(x, y);
+        const l = paradas_1.paradas.paradas.length;
+        var p = 0;
+        var dmin = 0;
+        for (let i = 0; i < l; i++) {
+            let d = Math.abs(x - paradas_1.paradas.paradas[i].coordinates[1]) + Math.abs(y - paradas_1.paradas.paradas[i].coordinates[0]);
+            if (d < dmin || dmin == 0) {
+                dmin = d;
+                p = paradas_1.paradas.paradas[i].cod_ubic_parada;
+            }
+        }
+        return p;
+    }
     config() {
         this.router.post('/', (req, res) => {
             const coordinates = req.body;
             res.send(coordinates);
         });
-        // http://localhost:3000?x=34.565675&y=21.342423
+        // http://localhost:3000?x=-34.8817596&y=-56.1150852
         this.router.get('/', (req, res) => {
             const coordinates = req.query;
             let parada = 780;
+            const x = coordinates.x;
+            const y = coordinates.y;
+            var nearestStop = this.getNearestStop(x, y);
+            console.log(nearestStop);
             // GET a la api de la IMM
             const options = {
-                url: `http://www.montevideo.gub.uy/transporteRest/lineas/${parada}`,
+                url: `http://www.montevideo.gub.uy/transporteRest/lineas/${nearestStop}`,
                 method: 'GET',
                 jar: true,
                 headers: {
@@ -31,7 +49,7 @@ class IndexRoutes {
                 }
             };
             request_1.default(options, (error, response, body) => {
-                res.send(paradas_1.paradas);
+                res.json(JSON.parse(body));
             });
             //res.send(coordinates);
         });
