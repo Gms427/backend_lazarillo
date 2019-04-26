@@ -8,6 +8,7 @@ const request_1 = __importDefault(require("request"));
 const paradas_1 = require("../paradas");
 class IndexRoutes {
     constructor() {
+        this.days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
         this.router = express_1.Router();
         this.config();
     }
@@ -25,6 +26,10 @@ class IndexRoutes {
         }
         return p;
     }
+    // getBusTime(m: minutes, s: seconds){
+    //   const
+    //
+    // }
     config() {
         this.router.post('/', (req, res) => {
             const coordinates = req.body;
@@ -39,8 +44,25 @@ class IndexRoutes {
             var nearestStop = this.getNearestStop(x, y);
             console.log(nearestStop);
             // GET a la api de la IMM
+            //`http://www.montevideo.gub.uy/transporteRest/lineas/${nearestStop}`
+            let currentDate = new Date();
+            let currentTime = currentDate.getHours().toString() + ":" + currentDate.getMinutes().toString();
+            let dayType = "";
+            let currentDay = this.days[currentDate.getDay()];
+            switch (currentDay.toLowerCase()) {
+                case "domingo":
+                    dayType = "DOMINGO";
+                    break;
+                case "sábado":
+                    dayType = "SABADO";
+                    break;
+                default:
+                    dayType = "HABIL";
+            }
+            let url = `http://www.montevideo.gub.uy/transporteRest/pasadas/${nearestStop}/${dayType}/${currentTime}`;
+            console.log(url);
             const options = {
-                url: `http://www.montevideo.gub.uy/transporteRest/lineas/${nearestStop}`,
+                url: url,
                 method: 'GET',
                 jar: true,
                 headers: {
